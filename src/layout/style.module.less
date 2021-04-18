@@ -1,0 +1,22 @@
+.layoutWrap {
+  display: flex;
+  align-items: flex-start;
+
+  .menuWrap {
+    width: 300px;
+    height: 100vh;
+    overflow-y: auto;
+
+    :global {
+      .ant-menu {
+        padding-top: 20px;
+        min-height: 100%;
+      }
+    }
+  }
+
+  .contentWrap {
+    flex: 1;
+    padding: 20px;
+  }
+}
