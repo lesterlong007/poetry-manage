@@ -24,7 +24,7 @@ const Routes = withRouter(({ location }) => {
         key={location.pathname}
       >
         <Switch location={location}>
-          <Redirect exact from="/" to="/index" />
+          <Redirect exact from="/" to="/Welcome" />
           {
             routes.map((item: RouteProps) => (
               <Route key={`rt${item.path}`} {...item} />
@@ -38,6 +38,7 @@ const Routes = withRouter(({ location }) => {
 });
 
 const Layout: React.FC<RouteComponentProps> = ({ history }) => {
+  const currentMenu: string = window.location.hash.slice(1);
 
   useEffect(() => {
 
@@ -47,31 +48,30 @@ const Layout: React.FC<RouteComponentProps> = ({ history }) => {
     <div className={style.layoutWrap}>
       <div className={style.menuWrap}>
         <Menu
-          defaultSelectedKeys={['1']}
-          defaultOpenKeys={['sub1']}
+          defaultSelectedKeys={[currentMenu]}
+          defaultOpenKeys={['envelopeSet']}
           mode="inline"
           theme="dark"
           inlineCollapsed={false}
           onClick={info => {
-            console.log(info)
-            // @ts-ignore
-            history.push(info.key);
+            const path: string = String(info.key);
+            history.push(path);
           }}
         >
           <Menu.Item key="/questionTypeSet" icon={<PieChartOutlined />}>
             题型设置
           </Menu.Item>
-          <SubMenu key="sub1" icon={<MailOutlined />} title="奖励发放设置">
-            <Menu.Item key="/index">过关红包设置</Menu.Item>
-            <Menu.Item key="3">过关金币设置</Menu.Item>
-            <Menu.Item key="4">定时红包设置</Menu.Item>
-            <Menu.Item key="5">红包墙设置</Menu.Item>
+          <SubMenu key="envelopeSet" icon={<MailOutlined />} title="奖励发放设置">
+            <Menu.Item key="/passRedEnvelope">过关红包设置</Menu.Item>
+            <Menu.Item key="/passGoldSet">过关金币设置</Menu.Item>
+            <Menu.Item key="/timedRedEnvelope">定时红包设置</Menu.Item>
+            <Menu.Item key="/redEnvelopeWall">红包墙设置</Menu.Item>
           </SubMenu>
-          <Menu.Item key="6" icon={<ContainerOutlined />}>
+          <Menu.Item key="/taskList" icon={<ContainerOutlined />}>
             任务设置
           </Menu.Item>
-          <Menu.Item key="7" icon={<AppstoreOutlined />}>
-            提现设置
+          <Menu.Item key="/clockInWithdraw" icon={<AppstoreOutlined />}>
+            打卡提现申请
           </Menu.Item>
         </Menu>
       </div>
