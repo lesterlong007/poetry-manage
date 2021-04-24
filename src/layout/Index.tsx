@@ -7,7 +7,7 @@ import React, { useEffect } from "react";
 import { Switch, Route, RouteProps, Redirect, withRouter, RouteComponentProps } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { Menu } from 'antd';
-import { AppstoreOutlined, PieChartOutlined, ContainerOutlined, MailOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, PieChartOutlined, ContainerOutlined, MailOutlined, BarChartOutlined } from '@ant-design/icons';
 import routes from 'src/pages/route';
 import style from './style.module.less';
 import './style.less';
@@ -73,6 +73,12 @@ const Layout: React.FC<RouteComponentProps> = ({ history }) => {
           <Menu.Item key="/clockInWithdraw" icon={<AppstoreOutlined />}>
             打卡提现申请
           </Menu.Item>
+          <SubMenu key="statistics" icon={<BarChartOutlined />} title="数据统计">
+            <Menu.Item key="/pageDaily">页面日活及留存</Menu.Item>
+            <Menu.Item key="/answerData">答题数据</Menu.Item>
+            <Menu.Item key="/adData">广告数据</Menu.Item>
+            <Menu.Item key="/assistData">辅助观察数据</Menu.Item>
+          </SubMenu>
         </Menu>
       </div>
       <div className={style.contentWrap}>

@@ -4,19 +4,19 @@
  */
 
 import React,{ useEffect, useState } from "react";
-import { Table, Button, Card, Modal, InputNumber, Form } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import Edit from "./Edit";
+import {Table, Button, Card, Modal, InputNumber, Form, Col, Row} from "antd";
+// import { PlusOutlined } from "@ant-design/icons";
+// import Edit from "./Edit";
 import style from './style.module.less';
 
-const { useForm, Item } = Form;
+// const { useForm, Item } = Form;
 
 const RedEnvelopeWall: React.FC = () => {
   const [strategyList, setStrategyList] = useState<any[]>([]);
   const [editVisible, setEditVisible] = useState<boolean>(false);
   const [currentData, setCurrentData] = useState<any>(null);
 
-  const [form] = useForm();
+  // const [form] = useForm();
 
   const deleteQuestionType = (id: number) => {
     Modal.confirm({
@@ -38,7 +38,7 @@ const RedEnvelopeWall: React.FC = () => {
   }, {
     title: `红包最大值(金币)`,
     dataIndex: 'goldMax',
-  }, {
+  }/*, {
     title: '操作',
     dataIndex: 'id',
     render: (text: number, item: any) => (
@@ -52,7 +52,7 @@ const RedEnvelopeWall: React.FC = () => {
         }
       </>
     )
-  }];
+  }*/];
 
   const formLayout = {
     labelCol: { span: 4 },
@@ -82,7 +82,11 @@ const RedEnvelopeWall: React.FC = () => {
 
   return (
     <Card title="红包墙设置" className={style.wrap}>
-      <Form form={form} onFinish={onSave} {...formLayout} initialValues={{ type: 1 }}>
+      <Row>
+        <Col span={3}>时间间隔(秒)：</Col>
+        <Col span={4}>300</Col>
+      </Row>
+     {/* <Form form={form} onFinish={onSave} {...formLayout} initialValues={{ type: 1 }}>
         <Item
           label="时间间隔(秒)"
           name="time"
@@ -93,11 +97,11 @@ const RedEnvelopeWall: React.FC = () => {
         >
           <InputNumber placeholder="请输入" />
         </Item>
-      </Form>
-      <Button type="primary" onClick={() => {
+      </Form>*/}
+      {/*<Button type="primary" onClick={() => {
         setEditVisible(true);
         setCurrentData(null);
-      }}><PlusOutlined />新增</Button>
+      }}><PlusOutlined />新增</Button>*/}
       <Table
         className={style.tableWrap}
         columns={columns}
@@ -105,13 +109,13 @@ const RedEnvelopeWall: React.FC = () => {
         rowKey="id"
         pagination={false}
       />
-      <Edit
+      {/*<Edit
         data={currentData}
         visible={editVisible}
         onClose={() => {
           setEditVisible(false);
         }}
-      />
+      />*/}
     </Card>
   )
 };

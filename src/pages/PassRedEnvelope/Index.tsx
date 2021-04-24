@@ -5,14 +5,14 @@
 
 import React,{ useEffect, useState } from "react";
 import { Table, Button, Card, Modal } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import Edit from "./Edit";
+// import { PlusOutlined } from "@ant-design/icons";
+// import Edit from "./Edit";
 import style from './style.module.less';
 
 const PassRedEnvelope: React.FC = () => {
   const [strategyList, setStrategyList] = useState<any[]>([]);
-  const [editVisible, setEditVisible] = useState<boolean>(false);
-  const [currentData, setCurrentData] = useState<any>(null);
+  // const [editVisible, setEditVisible] = useState<boolean>(false);
+  // const [currentData, setCurrentData] = useState<any>(null);
 
   const deleteQuestionType = (id: number) => {
     Modal.confirm({
@@ -33,7 +33,7 @@ const PassRedEnvelope: React.FC = () => {
   }, {
     title: '红包最大值(元)',
     dataIndex: 'redEnvelopeMax',
-  }, {
+  }/*, {
     title: '操作',
     dataIndex: 'id',
     render: (text: number, item: any) => (
@@ -47,7 +47,7 @@ const PassRedEnvelope: React.FC = () => {
         }
       </>
     )
-  }];
+  }*/];
 
   useEffect(() => {
     setStrategyList([{
@@ -68,10 +68,10 @@ const PassRedEnvelope: React.FC = () => {
 
   return (
     <Card title="过关红包设置" className={style.wrap}>
-      <Button type="primary" onClick={() => {
+     {/* <Button type="primary" onClick={() => {
         setEditVisible(true);
         setCurrentData(null);
-      }}><PlusOutlined />新增</Button>
+      }}><PlusOutlined />新增</Button> */}
       <Table
         className={style.tableWrap}
         columns={columns}
@@ -79,13 +79,13 @@ const PassRedEnvelope: React.FC = () => {
         rowKey="id"
         pagination={false}
       />
-      <Edit
+      {/* <Edit
         data={currentData}
         visible={editVisible}
         onClose={() => {
           setEditVisible(false);
         }}
-      />
+      /> */}
     </Card>
   )
 };

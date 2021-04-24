@@ -5,19 +5,19 @@
 
 import React,{ useEffect, useState } from "react";
 import { Table, Button, Card, Modal, Radio, InputNumber, Form, Col, Row } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import Edit from "./Edit";
+// import { PlusOutlined } from "@ant-design/icons";
+// import Edit from "./Edit";
 import style from './style.module.less';
 
-const { useForm, Item } = Form;
+// const { useForm, Item } = Form;
 
 const TimedRedEnvelope: React.FC = () => {
   const [strategyList, setStrategyList] = useState<any[]>([]);
-  const [editVisible, setEditVisible] = useState<boolean>(false);
-  const [currentData, setCurrentData] = useState<any>(null);
+  // const [editVisible, setEditVisible] = useState<boolean>(false);
+  // const [currentData, setCurrentData] = useState<any>(null);
   const [strategyType, setStrategyType] = useState<number>(1);
 
-  const [form] = useForm();
+  // const [form] = useForm();
 
   const deleteQuestionType = (id: number) => {
     Modal.confirm({
@@ -42,7 +42,7 @@ const TimedRedEnvelope: React.FC = () => {
   }, {
     title: `红包最大值(${getUnit()})`,
     dataIndex: 'goldMax',
-  }, {
+  }/*, {
     title: '操作',
     dataIndex: 'id',
     render: (text: number, item: any) => (
@@ -56,7 +56,7 @@ const TimedRedEnvelope: React.FC = () => {
         }
       </>
     )
-  }];
+  }*/];
 
   const formLayout = {
     labelCol: { span: 4 },
@@ -86,7 +86,11 @@ const TimedRedEnvelope: React.FC = () => {
 
   return (
     <Card title="定时红包设置" className={style.wrap}>
-      <Form form={form} onFinish={onSave} {...formLayout} initialValues={{ type: 1 }}>
+      <Row>
+        <Col span={3}>时间间隔(秒)：</Col>
+        <Col span={4}>300</Col>
+      </Row>
+     {/* <Form form={form} onFinish={onSave} {...formLayout} initialValues={{ type: 1 }}>
         <Item label="时间间隔(秒)" name="time" rules={[{ required: true, message: '请输入' }]}>
           <InputNumber placeholder="请输入" />
         </Item>
@@ -103,16 +107,16 @@ const TimedRedEnvelope: React.FC = () => {
             <Radio value={2}>金币</Radio>
           </Radio.Group>
         </Item>
-      </Form>
-      <Row>
+      </Form>*/}
+      <Row className={style.mt15}>
         <Col span={3}>发放策略：</Col>
         <Col span={20}>
-          <Button type="primary" onClick={() => {
+          {/*<Button type="primary" onClick={() => {
             setEditVisible(true);
             setCurrentData(null);
-          }}><PlusOutlined />新增</Button>
+          }}><PlusOutlined />新增</Button>*/}
           <Table
-            className={style.tableWrap}
+            className={style.mt15}
             columns={columns}
             dataSource={strategyList}
             rowKey="id"
@@ -120,14 +124,14 @@ const TimedRedEnvelope: React.FC = () => {
           />
         </Col>
       </Row>
-      <Edit
+     {/* <Edit
         strategyType={strategyType}
         data={currentData}
         visible={editVisible}
         onClose={() => {
           setEditVisible(false);
         }}
-      />
+      />*/}
     </Card>
   )
 };
