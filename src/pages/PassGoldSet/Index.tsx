@@ -5,6 +5,7 @@
 
 import React,{ useEffect, useState } from "react";
 import { Table, Button, Card, Modal } from "antd";
+import { queryPassGold } from "src/apis";
 // import { PlusOutlined } from "@ant-design/icons";
 // import Edit from "./Edit";
 import style from './style.module.less';
@@ -23,16 +24,22 @@ const PassGoldSet: React.FC = () => {
     })
   };
 
+  const getPassGold = async () => {
+    const res: any = await queryPassGold();
+    setStrategyList(res || []);
+  };
+
   const columns: any[] = [{
     title: '当前用户资产(元)',
-    dataIndex: 'isDefault',
-    render: (text: boolean, item: any) => text ? '保底策略' : `${item.assetsMin}-${item.assetsMax}`
+    dataIndex: 'id',
+    render: (text: number, item: any) => item.minBalance === item.maxBalance && item.minBalance === 0 ?
+      '保底策略' : `${item.minBalance}-${item.maxBalance}`
   }, {
     title: '红包最小值(金币)',
-    dataIndex: 'goldMin',
+    dataIndex: 'minValue',
   }, {
     title: '红包最大值(金币)',
-    dataIndex: 'goldMax',
+    dataIndex: 'maxValue',
   }/*, {
     title: '操作',
     dataIndex: 'id',
@@ -50,20 +57,7 @@ const PassGoldSet: React.FC = () => {
   }*/];
 
   useEffect(() => {
-    setStrategyList([{
-      id: 1,
-      isDefault: true,
-      assetsMin: 0,
-      assetsMax: 0,
-      goldMin: 2000,
-      goldMax: 2500,
-    }, {
-      id: 2,
-      assetsMin: 0.00,
-      assetsMax: 9.99,
-      goldMin: 10000,
-      goldMax: 15000,
-    }])
+    getPassGold();
   }, []);
 
   return (

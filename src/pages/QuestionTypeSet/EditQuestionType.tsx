@@ -4,8 +4,9 @@
  */
 
 import React, { useEffect } from "react";
-import { Modal, Form, InputNumber, Select, Row, Col } from "antd";
+import { Modal, Form, InputNumber, Select, Row, Col, message } from "antd";
 import { QUESTION_TYPES } from "src/utils/constant";
+import { addQuestionType } from "src/apis";
 import style from './style.module.less';
 
 const { useForm, Item } = Form;
@@ -15,9 +16,10 @@ interface IndexProps {
   data: any;
   visible: boolean;
   onClose: () => void;
+  onOk: () => void;
 }
 
-const EditQuestionType: React.FC<IndexProps> = ({ visible, onClose, data }) => {
+const EditQuestionType: React.FC<IndexProps> = ({ visible, onClose, onOk, data }) => {
   const [form] = useForm();
   const formLayout = {
     labelCol: { span: 8 },
@@ -29,8 +31,20 @@ const EditQuestionType: React.FC<IndexProps> = ({ visible, onClose, data }) => {
     wrapperCol: { span: 15 },
   };
 
-  const onSubmit = (values: any) => {
+  const onSubmit = async (values: any) => {
     console.log(values);
+    const param = {
+      ...values
+    };
+    if(data?.id) {
+      param.id = data.id;
+    }
+    const res = await addQuestionType(param);
+    if (res) {
+      message.success(`${data?.id ? '编辑' : '新增'}成功`);
+      onClose();
+      onOk();
+    }
   };
 
 
@@ -65,13 +79,13 @@ const EditQuestionType: React.FC<IndexProps> = ({ visible, onClose, data }) => {
           data?.id !== 1 && (
             <Row>
               <Col span={10}>
-                <Item label="关卡" name="checkpointStart" rules={[{ required: true, message: '请输入' }]}>
+                <Item label="关卡" name="minIndex" rules={[{ required: true, message: '请输入' }]}>
                   <InputNumber placeholder="请输入" />
                 </Item>
               </Col>
               <Col span={4}>——</Col>
               <Col span={10}>
-                <Item name="checkpointEnd" rules={[{ required: true, message: '请输入' }]}>
+                <Item name="maxIndex" rules={[{ required: true, message: '请输入' }]}>
                   <InputNumber placeholder="请输入" />
                 </Item>
               </Col>

@@ -4,9 +4,10 @@
  */
 
 import React,{ useEffect, useState } from "react";
-import { Table, Button, Card, Modal } from "antd";
+import { Table, Button, Card, Modal, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { QUESTION_TYPES } from "src/utils/constant";
+import { queryQuestionTypes, deleteQuestionType } from "src/apis";
 import EditQuestionType from "./EditQuestionType";
 import style from './style.module.less';
 
@@ -15,19 +16,28 @@ const QuestionTypeSet: React.FC = () => {
   const [editVisible, setEditVisible] = useState<boolean>(false);
   const [currentData, setCurrentData] = useState<any>(null);
 
-  const deleteQuestionType = (id: number) => {
+  const getQuestionTypes = async () => {
+    const res: any = await queryQuestionTypes();
+    setQuestionList(res || []);
+  };
+
+  const delQuestionType = (id: number) => {
     Modal.confirm({
       content: '确定删除？',
       async onOk() {
-        console.log(id);
+        const res: any = deleteQuestionType({ id });
+        if (res) {
+          message.success('删除成功！');
+          getQuestionTypes();
+        }
       }
     })
   };
 
   const columns: any[] = [{
     title: '关卡对象',
-    render: (text: string, item: any) => (item.checkpointStart === 0 && item.checkpointEnd === 0 ?
-      '未设置关卡' : `${item.checkpointStart}-${item.checkpointEnd}` )
+    render: (text: string, item: any) => (item.minIndex === 0 && item.maxIndex === 0 ?
+      '未设置关卡' : `${item.minIndex}-${item.maxIndex}` )
   }, {
     title: '题型',
     dataIndex: 'questionType',
@@ -42,24 +52,14 @@ const QuestionTypeSet: React.FC = () => {
           setCurrentData(item);
         }}>编辑</Button>
         {
-          text !== 1 && <Button type="link" onClick={() => deleteQuestionType(text)}>删除</Button>
+          text !== 1 && <Button type="link" onClick={() => delQuestionType(text)}>删除</Button>
         }
       </>
     )
   }];
 
   useEffect(() => {
-    setQuestionList([{
-      id: 1,
-      checkpointStart: 0,
-      checkpointEnd: 0,
-      questionType: 0,
-    }, {
-      id: 2,
-      checkpointStart: 1,
-      checkpointEnd: 5,
-      questionType: 1,
-    }])
+    getQuestionTypes();
   }, []);
 
   return (
@@ -78,9 +78,8 @@ const QuestionTypeSet: React.FC = () => {
       <EditQuestionType
         data={currentData}
         visible={editVisible}
-        onClose={() => {
-          setEditVisible(false);
-        }}
+        onClose={() => setEditVisible(false)}
+        onOk={() => getQuestionTypes()}
       />
     </Card>
   )

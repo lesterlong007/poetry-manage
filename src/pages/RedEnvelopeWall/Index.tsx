@@ -5,6 +5,7 @@
 
 import React,{ useEffect, useState } from "react";
 import {Table, Button, Card, Modal, InputNumber, Form, Col, Row} from "antd";
+import { queryRedWallList } from "src/apis";
 // import { PlusOutlined } from "@ant-design/icons";
 // import Edit from "./Edit";
 import style from './style.module.less';
@@ -13,8 +14,8 @@ import style from './style.module.less';
 
 const RedEnvelopeWall: React.FC = () => {
   const [strategyList, setStrategyList] = useState<any[]>([]);
-  const [editVisible, setEditVisible] = useState<boolean>(false);
-  const [currentData, setCurrentData] = useState<any>(null);
+  // const [editVisible, setEditVisible] = useState<boolean>(false);
+  // const [currentData, setCurrentData] = useState<any>(null);
 
   // const [form] = useForm();
 
@@ -27,17 +28,22 @@ const RedEnvelopeWall: React.FC = () => {
     })
   };
 
+  const getRedWallList = async () => {
+    const res: any = await queryRedWallList();
+    setStrategyList(res || []);
+  };
 
   const columns: any[] = [{
     title: `当前用户资产(元)`,
-    dataIndex: 'isDefault',
-    render: (text: boolean, item: any) => text ? '保底策略' : `${item.assetsMin}-${item.assetsMax}`
+    dataIndex: 'id',
+    render: (text: number, item: any) => item.minBalance === item.maxBalance && item.minBalance === 0 ?
+      '保底策略' : `${item.minBalance}-${item.maxBalance}`
   }, {
     title: `红包最小值(金币)`,
-    dataIndex: 'goldMin',
+    dataIndex: 'minValue',
   }, {
     title: `红包最大值(金币)`,
-    dataIndex: 'goldMax',
+    dataIndex: 'maxValue',
   }/*, {
     title: '操作',
     dataIndex: 'id',
@@ -64,20 +70,7 @@ const RedEnvelopeWall: React.FC = () => {
   };
 
   useEffect(() => {
-    setStrategyList([{
-      id: 1,
-      isDefault: true,
-      assetsMin: 0,
-      assetsMax: 0,
-      goldMin: 2000,
-      goldMax: 2500,
-    }, {
-      id: 2,
-      assetsMin: 0.00,
-      assetsMax: 9.99,
-      goldMin: 10000,
-      goldMax: 15000,
-    }])
+    getRedWallList();
   }, []);
 
   return (

@@ -5,6 +5,7 @@
 
 import React,{ useEffect, useState } from "react";
 import { Table, Button, Card, Modal, Radio, InputNumber, Form, Col, Row } from "antd";
+import { queryTimedRedList } from "src/apis";
 // import { PlusOutlined } from "@ant-design/icons";
 // import Edit from "./Edit";
 import style from './style.module.less';
@@ -28,20 +29,26 @@ const TimedRedEnvelope: React.FC = () => {
     })
   };
 
+  const getTimedRedList = async () => {
+    const res: any = await queryTimedRedList();
+    setStrategyList(res || []);
+  };
+
   const getUnit = () => {
     return strategyType === 1 ? '元' : '金币';
   };
 
   const columns: any[] = [{
     title: `当前用户资产(元)`,
-    dataIndex: 'isDefault',
-    render: (text: boolean, item: any) => text ? '保底策略' : `${item.assetsMin}-${item.assetsMax}`
+    dataIndex: 'id',
+    render: (text: number, item: any) => item.minBalance === item.maxBalance && item.minBalance === 0 ?
+      '保底策略' : `${item.minBalance}-${item.maxBalance}`
   }, {
     title: `红包最小值(${getUnit()})`,
-    dataIndex: 'goldMin',
+    dataIndex: 'minValue',
   }, {
     title: `红包最大值(${getUnit()})`,
-    dataIndex: 'goldMax',
+    dataIndex: 'maxValue',
   }/*, {
     title: '操作',
     dataIndex: 'id',
@@ -68,20 +75,7 @@ const TimedRedEnvelope: React.FC = () => {
   };
 
   useEffect(() => {
-    setStrategyList([{
-      id: 1,
-      isDefault: true,
-      assetsMin: 0,
-      assetsMax: 0,
-      goldMin: 2000,
-      goldMax: 2500,
-    }, {
-      id: 2,
-      assetsMin: 0.00,
-      assetsMax: 9.99,
-      goldMin: 10000,
-      goldMax: 15000,
-    }])
+    getTimedRedList();
   }, []);
 
   return (

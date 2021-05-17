@@ -4,7 +4,8 @@
  */
 
 import React,{ useEffect, useState } from "react";
-import { Table, Button, Card, Modal } from "antd";
+import { Table, Button, Card, Modal, message } from "antd";
+import { queryWithdrawList, modifyWithdrawStatus } from "src/apis";
 import moment from "moment";
 import style from './style.module.less';
 
@@ -15,14 +16,22 @@ const ClockInWithdraw: React.FC = () => {
     Modal.confirm({
       content: '确定修改提现状态？',
       async onOk() {
-        console.log(item.id);
+        const res: any = await modifyWithdrawStatus({ id: item.id });
+        if (res) {
+          message.success('修改成功！');
+        }
       }
     })
   };
 
+  const getWithdrawList = async () => {
+    const res: any = await queryWithdrawList();
+    setApplyList(res || []);
+  };
+
   const columns: any[] = [{
     title: '用户昵称',
-    dataIndex: 'userName'
+    dataIndex: 'nickName'
   }, {
     title: '用户openId',
     dataIndex: 'openId',
@@ -32,16 +41,16 @@ const ClockInWithdraw: React.FC = () => {
     render: (text: number) => moment(text).format('YYYY-MM-DD HH:mm:ss')
   }, {
     title: '提现金额(元)',
-    dataIndex: 'count',
+    dataIndex: 'amount',
     render: (text: number) => (text / 100).toFixed(2)
   }, {
     title: '收款二维码',
-    dataIndex: 'qrCodeImg',
+    dataIndex: 'colletMoneyUrl',
     render: (text: string) => <img className={style.qrCodeImg} src={text} onClick={() => window.open(text)} alt=""/>
   }, {
     title: '提现状态',
-    dataIndex: 'status',
-    render: (text: number) => `${text === 0 ? '待' : '已'}提现`
+    dataIndex: 'withdrawStatus',
+    render: (text: number) => `${text === 1 ? '待' : '已'}提现`
   }, {
     title: '操作',
     dataIndex: 'id',
@@ -53,23 +62,7 @@ const ClockInWithdraw: React.FC = () => {
   }];
 
   useEffect(() => {
-    setApplyList([{
-      id: 1,
-      userName: 'lester',
-      openId: '1123sadsadsad',
-      applyTime: '1619022788782',
-      count: 30,
-      qrCodeImg: '',
-      status: 1,
-    }, {
-      id: 2,
-      userName: 'carry',
-      openId: '1123sadsadsad',
-      applyTime: '1619022788782',
-      count: 120,
-      qrCodeImg: '',
-      status: 0,
-    }])
+    getWithdrawList();
   }, []);
 
   return (

@@ -4,8 +4,9 @@
  */
 
 import React,{ useEffect, useState } from "react";
-import { Table, Button, Card, Modal } from "antd";
+import { Table, Button, Card, Modal, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import { queryTaskList, deleteTask } from "src/apis";
 import Edit from "./Edit";
 import style from './style.module.less';
 
@@ -15,11 +16,20 @@ const TaskList: React.FC = () => {
   const [currentData, setCurrentData] = useState<any>(null);
   const [taskIndex, setTaskIndex] = useState<number>(1);
 
-  const deleteQuestionType = (id: number) => {
+  const getTaskList = async () => {
+    const res: any = await queryTaskList();
+    setTaskList(res || []);
+  };
+
+  const delTask = (id: number) => {
     Modal.confirm({
       content: '确定删除？',
       async onOk() {
-        console.log(id);
+        const res: any = await deleteTask({ id });
+        if (res) {
+          message.success('删除成功！');
+          getTaskList();
+        }
       }
     })
   };
@@ -29,10 +39,10 @@ const TaskList: React.FC = () => {
     render: (text: string, item: any, index: number) => index + 1
   }, {
     title: '每日通关数量',
-    dataIndex: 'dayCount',
+    dataIndex: 'levelQuantity',
   }, {
     title: '奖励金币数量',
-    dataIndex: 'rewardCount',
+    dataIndex: 'rewardQuantity',
   }, {
     title: '操作',
     dataIndex: 'id',
@@ -44,22 +54,14 @@ const TaskList: React.FC = () => {
           setTaskIndex(index + 1);
         }}>编辑</Button>
         {
-          text !== 1 && <Button type="link" onClick={() => deleteQuestionType(text)}>删除</Button>
+          text !== 1 && <Button type="link" onClick={() => delTask(text)}>删除</Button>
         }
       </>
     )
   }];
 
   useEffect(() => {
-    setTaskList([{
-      id: 1,
-      dayCount: 5,
-      rewardCount: 5000
-    }, {
-      id: 2,
-      dayCount: 10,
-      rewardCount: 10000
-    }])
+    getTaskList();
   }, []);
 
   return (
@@ -79,9 +81,8 @@ const TaskList: React.FC = () => {
         taskIndex={taskIndex}
         data={currentData}
         visible={editVisible}
-        onClose={() => {
-          setEditVisible(false);
-        }}
+        onClose={() => setEditVisible(false)}
+        onOk={() => getTaskList()}
       />
     </Card>
   )
