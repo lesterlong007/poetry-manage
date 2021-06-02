@@ -7,7 +7,7 @@ import Axios, { AxiosInstance, Method, AxiosResponse, AxiosError, AxiosRequestCo
 import { message } from "antd";
 
 const instance: AxiosInstance = Axios.create({
-  timeout: 10000,
+  timeout: 10000
 });
 
 /**
@@ -36,7 +36,7 @@ const handleRes = (res: AxiosResponse, resolve: Function, reject: Function) => {
     if(res.data.code === 0) {
       resolve(res.data.data || {});
     } else {
-      const { msg } = res.data;
+      const { message: msg } = res.data;
       message.error(msg);
       resolve(null);
     }
@@ -47,15 +47,31 @@ const handleRes = (res: AxiosResponse, resolve: Function, reject: Function) => {
   }
 };
 
+/**
+ * 处理token失效
+ * @param err
+ */
+const handleError = (err: AxiosError) => {
+  if (JSON.stringify(err).includes('401')) {
+    const { origin, pathname, href } = window.location;
+    const url: string = origin + pathname + '#/login?redirectUrl=' + encodeURIComponent(href);
+    window.location.replace(url);
+  }
+};
+
 const get = (url: string, params?: any, config?: AxiosRequestConfig) => {
   return new Promise((resolve, reject) => {
     instance.get(url, {
       params,
+      headers: {
+        'X-Token': window.sessionStorage.getItem('token')
+      },
       ...config
     }).then((res: AxiosResponse) => {
       handleRes(res, resolve, reject);
     }).catch((err: AxiosError) => {
       console.error(err);
+      handleError(err);
       resolve(null);
     })
   })
@@ -67,11 +83,15 @@ const deleteMethod = (url: string, data: any, config?: AxiosRequestConfig) => {
       data: {
         ...data
       },
+      headers: {
+        'X-Token': window.sessionStorage.getItem('token')
+      },
       ...config
     }).then((res: AxiosResponse) => {
       handleRes(res, resolve, reject);
     }).catch((err: AxiosError) => {
       console.error(err);
+      handleError(err);
       resolve(null);
     })
   })
@@ -84,11 +104,15 @@ const unGet = (type: RequestMethod) => {
     return new Promise((resolve, reject) => {
       // @ts-ignore
       instance[type](url, data, {
+        headers: {
+          'X-Token': window.sessionStorage.getItem('token')
+        },
         ...config
       }).then((res: AxiosResponse) => {
         handleRes(res, resolve, reject);
       }).catch((err: AxiosError) => {
         console.error(err);
+        handleError(err);
         resolve(null);
       })
     })
@@ -108,7 +132,7 @@ const request =  function (url: string, params?: any, type: Method = 'get', conf
         if(res.data.code === 0) {
           resolve(res.data.data || {});
         } else {
-          const { msg } = res.data;
+          const { message: msg } = res.data;
           message.error(msg);
           resolve(null);
         }
@@ -122,11 +146,15 @@ const request =  function (url: string, params?: any, type: Method = 'get', conf
     if (type === 'get') {
       instance.get(url, {
         params,
+        headers: {
+          'X-Token': window.sessionStorage.getItem('token')
+        },
         ...config
       }).then((res: AxiosResponse) => {
         handleRes(res);
       }).catch((err: AxiosError) => {
         console.error(err);
+        handleError(err);
         resolve(null);
       })
     } else if (type === 'delete') {
@@ -134,22 +162,30 @@ const request =  function (url: string, params?: any, type: Method = 'get', conf
         data: {
           ...params
         },
+        headers: {
+          'X-Token': window.sessionStorage.getItem('token')
+        },
         ...config
       }).then((res: AxiosResponse) => {
         handleRes(res);
       }).catch((err: AxiosError) => {
         console.error(err);
+        handleError(err);
         resolve(null);
       })
     } else {
       // @ts-ignore
       instance[type](url, params, {
+        headers: {
+          'X-Token': window.sessionStorage.getItem('token')
+        },
         ...config
       }).then((res: AxiosResponse) => {
         handleRes(res);
       }).catch((err: AxiosError) => {
         resolve(null);
         console.error(err);
+        handleError(err);
       })
     }
   })

@@ -6,6 +6,21 @@
 import http from "src/utils/http";
 
 /**
+ * 登录
+ * @param param
+ */
+export function login(param: Object) {
+  return http.post('/api/admin/login', param);
+}
+
+/**
+ * 获取系统配置项
+ */
+export function querySystemConfig() {
+  return http.get('/api/admin/settings/system-config');
+}
+
+/**
  * 查询题型配置列表
  */
 export function queryQuestionTypes() {

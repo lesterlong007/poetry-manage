@@ -5,7 +5,7 @@
 
 import React,{ useEffect, useState } from "react";
 import { Table, Button, Card, Modal, Radio, InputNumber, Form, Col, Row } from "antd";
-import { queryTimedRedList } from "src/apis";
+import { querySystemConfig, queryTimedRedList } from "src/apis";
 // import { PlusOutlined } from "@ant-design/icons";
 // import Edit from "./Edit";
 import style from './style.module.less';
@@ -14,6 +14,7 @@ import style from './style.module.less';
 
 const TimedRedEnvelope: React.FC = () => {
   const [strategyList, setStrategyList] = useState<any[]>([]);
+  const [intervalTime, setIntervalTime] = useState<number>(0);
   // const [editVisible, setEditVisible] = useState<boolean>(false);
   // const [currentData, setCurrentData] = useState<any>(null);
   const [strategyType, setStrategyType] = useState<number>(1);
@@ -27,6 +28,13 @@ const TimedRedEnvelope: React.FC = () => {
         console.log(id);
       }
     })
+  };
+
+  const getSystemConfig = async () => {
+    const res: any = await querySystemConfig();
+    if (res) {
+      setIntervalTime(+res.schedule_red_packet_interval);
+    }
   };
 
   const getTimedRedList = async () => {
@@ -76,13 +84,14 @@ const TimedRedEnvelope: React.FC = () => {
 
   useEffect(() => {
     getTimedRedList();
+    getSystemConfig();
   }, []);
 
   return (
     <Card title="定时红包设置" className={style.wrap}>
       <Row>
         <Col span={3}>时间间隔(秒)：</Col>
-        <Col span={4}>300</Col>
+        <Col span={4}>{intervalTime}</Col>
       </Row>
      {/* <Form form={form} onFinish={onSave} {...formLayout} initialValues={{ type: 1 }}>
         <Item label="时间间隔(秒)" name="time" rules={[{ required: true, message: '请输入' }]}>

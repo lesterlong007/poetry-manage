@@ -6,6 +6,8 @@
 import React from "react";
 import { Form, Input, Button } from "antd";
 import { RouteComponentProps } from "react-router-dom";
+import { getQueryParam } from 'lester-tools';
+import { login } from 'src/apis';
 import style from './style.module.less';
 
 const { useForm, Item } = Form;
@@ -18,9 +20,19 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
     wrapperCol: { span: 14 },
   };
 
-  const onSubmit = (values: any) => {
-    console.log(values);
-    history.push('/');
+  const onSubmit = async (values: any) => {
+    const res: any = await login(values);
+    if (res) {
+      Object.entries(res).forEach(([key, val]) => {
+        window.sessionStorage.setItem(key, String(val));
+      });
+      const redirectUrl: string = getQueryParam('redirectUrl');
+      if (redirectUrl) {
+        window.location.replace(redirectUrl);
+      } else {
+        history.push('/');
+      }
+    }
   };
 
 

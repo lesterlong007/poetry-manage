@@ -4,9 +4,9 @@
  */
 
 import React,{ useEffect, useState } from "react";
-import { Table, Button, Card, Modal, message } from "antd";
+import {Table, Button, Card, Modal, message, Col, Row} from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { queryTaskList, deleteTask } from "src/apis";
+import { queryTaskList, deleteTask, querySystemConfig } from "src/apis";
 import Edit from "./Edit";
 import style from './style.module.less';
 
@@ -15,6 +15,14 @@ const TaskList: React.FC = () => {
   const [editVisible, setEditVisible] = useState<boolean>(false);
   const [currentData, setCurrentData] = useState<any>(null);
   const [taskIndex, setTaskIndex] = useState<number>(1);
+  const [redCountForClock, setCount] = useState<number>(10);
+
+  const getSystemConfig = async () => {
+    const res: any = await querySystemConfig();
+    if (res) {
+      setCount(+res.expected_level_rp_for_clock_in);
+    }
+  };
 
   const getTaskList = async () => {
     const res: any = await queryTaskList();
@@ -62,6 +70,7 @@ const TaskList: React.FC = () => {
 
   useEffect(() => {
     getTaskList();
+    getSystemConfig();
   }, []);
 
   return (
@@ -70,8 +79,12 @@ const TaskList: React.FC = () => {
         setEditVisible(true);
         setCurrentData(null);
       }}><PlusOutlined />新增</Button>
+      <Row className={style.mt15}>
+        <Col span={6}>每日打卡所需领取过关红包次数：</Col>
+        <Col span={4}>{redCountForClock}</Col>
+      </Row>
       <Table
-        className={style.tableWrap}
+        className={style.mt15}
         columns={columns}
         dataSource={taskList}
         rowKey="id"

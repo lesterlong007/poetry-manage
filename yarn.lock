@@ -7146,6 +7146,14 @@ less@^4.1.1:
     needle "^2.5.2"
     source-map "~0.6.0"
 
+lester-tools@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/lester-tools/-/lester-tools-1.1.0.tgz#3eb7b0762c5c5a7f0da75a807b1c46e006b3ed11"
+  integrity sha512-CJcbg47MAzHYxLbTikRnrkoHRl5c+NeL/PiRmyNojfaFY1qEfYg3NdtDqEGf44tPwgXffw+kuxkLv9tAi3jNLQ==
+  dependencies:
+    axios "^0.21.1"
+    qs "^6.9.6"
+
 leven@^3.1.0:
   version "3.1.0"
   resolved "https://registry.npmjs.org/leven/-/leven-3.1.0.tgz#77891de834064cccba82ae7842bb6b14a13ed7f2"
@@ -9258,6 +9266,13 @@ qs@6.7.0:
   version "6.7.0"
   resolved "https://registry.npmjs.org/qs/-/qs-6.7.0.tgz#41dc1a015e3d581f1621776be31afb2876a9b1bc"
   integrity sha512-VCdBRNFTX1fyE7Nb6FYoURo/SPe62QCaAyzJvUjwRaIsc+NePBEniHlvxFmmX56+HZphIGtV0XeCirBtpDrTyQ==
+
+qs@^6.9.6:
+  version "6.10.1"
+  resolved "https://registry.npmjs.org/qs/-/qs-6.10.1.tgz#4931482fa8d647a5aab799c5271d2133b981fb6a"
+  integrity sha512-M528Hph6wsSVOBiYUnGf+K/7w0hNshs/duGsNXPUCLH5XAqjEtiPGwNONLV0tBH8NoGb0mvD5JubnUTrujKDTg==
+  dependencies:
+    side-channel "^1.0.4"
 
 qs@~6.5.2:
   version "6.5.2"
