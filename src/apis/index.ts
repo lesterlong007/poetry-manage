@@ -106,5 +106,5 @@ export function queryWithdrawList() {
  * @param param
  */
 export function modifyWithdrawStatus(param: Object) {
-  return http.post('/api/admin/transaction/do-withdraw', param);
+  return http.post('/api/admin/transaction/update-clock-in-withdraw-status', param);
 }

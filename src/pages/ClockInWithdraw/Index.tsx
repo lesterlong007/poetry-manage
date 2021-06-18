@@ -12,21 +12,24 @@ import style from './style.module.less';
 const ClockInWithdraw: React.FC = () => {
   const [applyList, setApplyList] = useState<any[]>([]);
 
-  const modifyStatus = (item: any) => {
-    Modal.confirm({
-      content: '确定修改提现状态？',
-      async onOk() {
-        const res: any = await modifyWithdrawStatus({ id: item.id });
-        if (res) {
-          message.success('修改成功！');
-        }
-      }
-    })
-  };
-
   const getWithdrawList = async () => {
     const res: any = await queryWithdrawList();
     setApplyList(res || []);
+  };
+
+  const modifyStatus = (item: any) => {
+    const status = item.withdrawStatus === 1 ? 2 : 1;
+    const tipsText = item.withdrawStatus === 1 ? '已' : '待';
+    Modal.confirm({
+      content: `确定修改状态为${tipsText}提现？`,
+      async onOk() {
+        const res: any = await modifyWithdrawStatus({ withdrawId: item.id, status });
+        if (res) {
+          message.success('修改成功！');
+          getWithdrawList();
+        }
+      }
+    })
   };
 
   const columns: any[] = [{
@@ -41,8 +44,7 @@ const ClockInWithdraw: React.FC = () => {
     render: (text: number) => moment(text).format('YYYY-MM-DD HH:mm:ss')
   }, {
     title: '提现金额(元)',
-    dataIndex: 'amount',
-    render: (text: number) => (text / 100).toFixed(2)
+    dataIndex: 'withdrawAmount'
   }, {
     title: '收款二维码',
     dataIndex: 'colletMoneyUrl',
@@ -56,7 +58,7 @@ const ClockInWithdraw: React.FC = () => {
     dataIndex: 'id',
     render: (text: number, item: any) => (
       <>
-        <Button type="link" onClick={() => modifyStatus(item)}>设置为{item.status === 0 ? '已' : '待'}提现</Button>
+        <Button type="link" onClick={() => modifyStatus(item)}>设置为{item.withdrawStatus === 1 ? '已' : '待'}提现</Button>
       </>
     )
   }];
