@@ -18,8 +18,8 @@ const ClockInWithdraw: React.FC = () => {
   };
 
   const modifyStatus = (item: any) => {
-    const status = item.withdrawStatus === 1 ? 2 : 1;
-    const tipsText = item.withdrawStatus === 1 ? '已' : '待';
+    const status = item.withdrawStatus === 2 ? 3 : 2;
+    const tipsText = item.withdrawStatus === 2 ? '已' : '待';
     Modal.confirm({
       content: `确定修改状态为${tipsText}提现？`,
       async onOk() {
@@ -52,13 +52,13 @@ const ClockInWithdraw: React.FC = () => {
   }, {
     title: '提现状态',
     dataIndex: 'withdrawStatus',
-    render: (text: number) => `${text === 1 ? '待' : '已'}提现`
+    render: (text: number) => `${text === 2 ? '待' : '已'}提现`
   }, {
     title: '操作',
     dataIndex: 'id',
     render: (text: number, item: any) => (
       <>
-        <Button type="link" onClick={() => modifyStatus(item)}>设置为{item.withdrawStatus === 1 ? '已' : '待'}提现</Button>
+        <Button type="link" onClick={() => modifyStatus(item)}>设置为{item.withdrawStatus === 2 ? '已' : '待'}提现</Button>
       </>
     )
   }];
